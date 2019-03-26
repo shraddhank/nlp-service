@@ -1,0 +1,7 @@
+logs/
+testdata/
+.idea
+.env
+.vscode
+.xml
+.idea/
