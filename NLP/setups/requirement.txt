@@ -1,0 +1,4 @@
+ftfy==4.4.3
+nltk
+Unidecode==1.0.23
+lxml

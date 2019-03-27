@@ -3,8 +3,8 @@ from concurrent import futures
 import time
 
 # import the generated classes
-from grpcs import nlp_pb2
-from grpcs import nlp_pb2_grpc
+from NLP.grpcs import nlp_pb2_grpc, nlp_pb2
+
 
 # import the original NLP.py
 
@@ -23,7 +23,7 @@ class NlpProcessorServicer(nlp_pb2_grpc.NlpProcessorServicer):
         from NLP.nlp_proc import NlpProc
         response = nlp_pb2.odata
         nlp_proc = NlpProc()
-        response.value = nlp_proc.perform_nlp(request.oid, request.odata, request.stemming,
+        response.oid, response.data = nlp_proc.perform_nlp(request.oid, request.data, request.stemming,
                                               request.named_entities, request.remove_stops, request.lemmatize)
         return response
 

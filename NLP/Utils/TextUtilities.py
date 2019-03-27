@@ -86,7 +86,7 @@ def plainTextAbstract(excerpt,oid = "not specified", max_words=None):
     """
     import re
     from lxml.html import fromstring
-    from R88R.Core.Utilities.BeautifulSoup import BeautifulSoup
+    from NLP.Utils.BeautifulSoup import BeautifulSoup
 
     # logger.info(abstract)
     abstract = newlinesFromPTags(excerpt)

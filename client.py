@@ -1,10 +1,8 @@
 import grpc
+import json
 
 # import the generated classes
-from grpcs import nlp_pb2
-from grpcs import nlp_pb2_grpc
-
-
+from NLP.grpcs import nlp_pb2_grpc, nlp_pb2
 
 # open a gRPC channel
 channel = grpc.insecure_channel('localhost:50051')
@@ -13,8 +11,9 @@ channel = grpc.insecure_channel('localhost:50051')
 stub = nlp_pb2_grpc.NlpProcessorStub(channel)
 
 # create a valid request message
-text = "The SciPy stack in Python is a mature and quickly expanding platform for scientific and numerical computing. The platform hosts libraries such as scikit-learn the general purpose machine learning library that can be used with your deep learning models.It is because of these benefits of the Python ecosystem that two top numerical libraries for deep learning were developed for Python, Theano and the newer TensorFlow library released by Google (and adopted recently by the Google DeepMind research group).Theano and TensorFlow are two top numerical libraries for developing deep learning models, but are too technical and complex for the average practitioner. They are intended more for research and development teams and academics interested in developing wholly new deep learning algorithms."
-idata = nlp_pb2.idata(oid="123", data=text)
+data = json.dumps({"kind": "course", "img": {"src": "https://cdn.filestackcontent.com/UqtJqsGSRPiYq8um9fQ7"}, "lxp": {"rating": None, "groups": None, "channels": None, "published_at": 1438214400.0, "prices_data": [], "is_public": False, "users_with_access": None, "category": [{"type": "provider_name", "value": "BFS"}], "additional_metadata": None, "user_id": None, "title": "101 India BFS Commercial TDIC New Hire TREASURY PAYMENT_India_NewHireLP", "restricted_groups": None, "hidden": False, "status": 2, "description": "This Training belongs to New hires. The leaners will understand process specific fundamentals and overview which will help them perform effecctively during OJT and IPRGFTE phases.", "tags": None, "pack_items": [], "organization_id": 15, "plan": ["free"], "restricted_users": None, "source_type_name": "csod", "duration_metadata": {"calculated_duration": 12600, "calculated_duration_display": "about 4 hours"}, "is_private": False, "source_type_id": "7fea23ad-3a0c-43cb-9752-956ab27d65c4", "language": "en", "level": None, "is_paid": False, "readable_card_type": "Curriculum", "content_type": "course", "source_id": "3b5dc86e-6c34-4451-bade-14e1d7db5d05", "external_id": "f27ddfe1-cac2-4c14-819a-0489c4ce207b"}, "headline": "101 India BFS Commercial TDIC New Hire TREASURY PAYMENT_India_NewHireLP", "abstract": None, "oid": "02ef433c-8fe2-4865-9fd4-d3db752ec6d0", "excerpt": None, "uri": "https://genpact.csod.com/samldefault.aspx?ouid=2&returnurl=https%3A%2F%2Fgenpact.csod.com%2FLMS%2FLoDetails%2FDetailsLo.aspx%3Floid%3Df27ddfe1-cac2-4c14-819a-0489c4ce207b", "ts": 1553683632.633, "images": [{"src": "https://cdn.filestackcontent.com/UqtJqsGSRPiYq8um9fQ7"}], "_id": "02ef433c-8fe2-4865-9fd4-d3db752ec6d0"})
+idata = nlp_pb2.idata(oid="02ef433c-8fe2-4865-9fd4-d3db752ec6d0", data=data, stemming=False,
+                      named_entities=False, remove_stops=True, lemmatize=True)
 
 # make the call
 response = stub.process_nlp(idata)

@@ -1,4 +1,5 @@
 import sys, traceback
+import json
 
 from NLP.Utils.TextUtilities import fix_bad_unicode_textacy as fix_bad_unicode
 from NLP.Utils.Words import Words
@@ -10,6 +11,7 @@ class NlpProc():
 
     def __init__(self):
         self._nlp = None
+        self.language = 'en'
 
     @property
     def nlp(self):
@@ -72,18 +74,20 @@ class NlpProc():
                           remove_stops=True, lemmatize = True):
         """ """
         try:
+
             item = {}
+            odata = json.loads(odata)
             text = odata.get('excerpt') or odata.get('lxp', {}).get('description')
 
             #get content language
             language = self.get_language_from_object(odata)
 
             if not text:
-                self.log.error('no excerpt for %s, keys %s' % (oid))
+                print('no excerpt for keys %s' % (oid))
                 return None
             plain_text = plain_text_abstract(text)
-            item['sentences'] = self._tokenize(plain_text, language=language, stemming=stemming, item=item,
-                                               remove_stops=remove_stops, lower=True, split=True,lemmatize = lemmatize)
+            item['sentences'] = self._tokenize(plain_text, language=language, stemming=stemming,
+                                               remove_stops=remove_stops, split=True,lemmatize = lemmatize)
 
             if named_entities:
                 """ generates list of entities for each type"""
@@ -100,11 +104,12 @@ class NlpProc():
                     item['ents'] = entities
 
                 except Exception as error:
-                    self.log.error('>>>entity_exception %s',error)
+                    print('>>>entity_exception %s',error)
                     return None
         except Exception as error:
-            self.log.error(error)
+            print(error)
             exc_type, exc_value, exc_traceback = sys.exc_info()
-            self.log.error('TRACE %s' % (repr(traceback.format_tb(exc_traceback))))
+            print('TRACE %s' % (repr(traceback.format_tb(exc_traceback))))
             return None
-        return oid, item
+        print(item)
+        return oid, json.dumps(item)
