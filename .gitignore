@@ -5,3 +5,4 @@ testdata/
 .vscode
 .xml
 .idea/
+.pyc

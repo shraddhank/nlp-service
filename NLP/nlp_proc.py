@@ -41,8 +41,7 @@ class NlpProc():
 
         return language
 
-    def _tokenize(self, text, language, stemming=False, item={}, remove_stops=True, lower=True, split=True,
-                  lemmatize=True):
+    def _tokenize(self, text, language, stemming=False,remove_stops=True,split=True,lemmatize=True):
         """ refactored to preserve tokenized sentences
         Test case fail L'objectif de l'ex GDF-Suez est de 2.200 MWc installÃ©s Ã  l'horizon 2021.
         """
@@ -69,18 +68,18 @@ class NlpProc():
 
         return cleaned_sentences  # backwards compatability
 
-    def process_text_item(self, odata, stemming=False, named_entities=False,
-                          weight=1.0, remove_stops=True, lemmatize = True):
+    def perform_nlp(self, oid, odata, stemming=False, named_entities=False,
+                          remove_stops=True, lemmatize = True):
         """ """
         try:
-            item = {'w': weight}
+            item = {}
             text = odata.get('excerpt') or odata.get('lxp', {}).get('description')
 
             #get content language
             language = self.get_language_from_object(odata)
 
             if not text:
-                self.log.error('no excerpt for %s, keys %s' % (odata))
+                self.log.error('no excerpt for %s, keys %s' % (oid))
                 return None
             plain_text = plain_text_abstract(text)
             item['sentences'] = self._tokenize(plain_text, language=language, stemming=stemming, item=item,
@@ -91,7 +90,7 @@ class NlpProc():
                 try:
                     ent_kinds = ['PERSON', 'ORG','WORK_OF_ART', 'PRODUCT','EVENT']
                     entities = {}
-                    text = unicode(plain_text)
+                    text = str(plain_text)
                     doc = self.nlp(text) or []
                     for ent in doc.ents:
                         if ent.label_ in ent_kinds:
@@ -108,4 +107,4 @@ class NlpProc():
             exc_type, exc_value, exc_traceback = sys.exc_info()
             self.log.error('TRACE %s' % (repr(traceback.format_tb(exc_traceback))))
             return None
-        return item
+        return oid, item

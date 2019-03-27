@@ -118,12 +118,12 @@ def plainTextAbstract(excerpt,oid = "not specified", max_words=None):
     try:
         tree = fromstring(temp)
         result = tree.text_content()
-    except Exception,x:
+    except Exception as x:
         #print 'ERROR - lxml could not parse abstract:trying soup'
         try:
             text = ''.join(BeautifulSoup(abstract).findAll(text=True))
             result = text
-        except Exception,x:
+        except Exception as x:
             #print 'ERROR - soup could not parse abstract for oid %s returning abstract %s'%(oid,abstract)
             result = abstract
     # result = newlinesFromPTags(result) # THIS IS NEEDED TO REMOVE <p> in FLipboard which get thru as &lt;p&gt;
@@ -133,7 +133,7 @@ def plainTextAbstract(excerpt,oid = "not specified", max_words=None):
         result = fixFakeUnicode(result)
         x = re.compile(r'(\n|\r|\s){2,}') # reduce \n to max 2
         result = x.sub(r'\n\n', result)
-    except Exception,error:
+    except Exception as error:
         logger.info(error)
         result = before
 
@@ -171,7 +171,7 @@ def ellipsizeAbstract(oid, abstract, charLength=500, ellipsisMarkup="<span class
         return fixed_html
     try:
         response = truncate_html(abstract, charLength)
-    except Exception,x:
+    except Exception as x:
         print_abstract = unicodedata.normalize('NFKD', unicode(abstract)).encode('ascii','ignore')
         print ('for oid: %s, could not ellipsize abstract %s to length %d' % (oid, print_abstract,charLength))
         print ('exception was %s' % x)
@@ -232,7 +232,7 @@ def backfillEntities(start=None, size=100, method=1):
         for i,one in enumerate(objs):
             ts = one.get('ts')
             if ts > latest:
-                print i, # logger.info('ts out of sequence %s %s'%(latest, ts))
+                print(i), # logger.info('ts out of sequence %s %s'%(latest, ts))
             latest = min(latest, ts)
             ent = time.time()
             wc = _ks.get_entities(one)
@@ -475,7 +475,7 @@ WINDOWS_1252_GREMLINS = [
 ]
 
 # a list of Unicode characters that might appear in Windows-1252 text
-WINDOWS_1252_CODEPOINTS = range(256) + WINDOWS_1252_GREMLINS
+WINDOWS_1252_CODEPOINTS = list(range(256)) + WINDOWS_1252_GREMLINS
 
 # Rank the characters typically represented by a single byte -- that is, in
 # Latin-1 or Windows-1252 -- by how weird it would be to see them in running
@@ -519,8 +519,8 @@ SINGLE_BYTE_WEIRDNESS = (
 # Pre-cache the Unicode data saying which of these first 256 characters are
 # letters. We'll need it often.
 SINGLE_BYTE_LETTERS = [
-    unicodedata.category(unichr(i)).startswith('L')
-    for i in xrange(256)
+    unicodedata.category(chr(i)).startswith('L')
+    for i in range(256)
 ]
 
 # A table telling us how to interpret the first word of a letter's Unicode

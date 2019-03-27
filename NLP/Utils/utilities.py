@@ -5,20 +5,20 @@
 
 __RCSID__ = '$Id: Utilities.py 3740 2011-03-13 19:47:19Z atsareg $'
 
-from R88R.Core.Logger import logger
+# from R88R.Core.Logger import logger
 
 
 def cleanStrings(data):
     """fixes funky string, e.g. backslashes in urls
     operates on strings here, recurses on other types ({} and [])"""
     changed = False
-    if isinstance(data, basestring):
+    if isinstance(data, str):
         # this is where strings are fixed, add other processing here if you like
         other = data.replace("\\", "")  # get rid of escaping
         changed = other != data
         if changed: data = other
     elif type(data) == type({}):  # recurse
-        for k, v in data.items():
+        for k, v in list(data.items()):
             v, thisChanged = cleanStrings(v)
             changed = changed or thisChanged
             data[k] = v
@@ -34,12 +34,12 @@ def cleanString(s, encoding='utf-8', errors='strict'):
     """
     Returns a bytestring version of strings. Migrated from smart_str in twitterIO
     """
-    if not isinstance(s, basestring):
+    if not isinstance(s, str):
         try:
             return str(s)
         except UnicodeEncodeError:
-            return unicode(s).encode(encoding, errors)
-    elif isinstance(s, unicode):
+            return str(s).encode(encoding, errors)
+    elif isinstance(s, str):
         return s.encode(encoding, errors)
     elif s and encoding != 'utf-8':
         return s.decode('utf-8', errors).encode(encoding, errors)
@@ -47,7 +47,7 @@ def cleanString(s, encoding='utf-8', errors='strict'):
         return s
 
 
-import re, htmlentitydefs
+import re, html.entities
 
 ##
 # Removes HTML or XML character references and entities from a text string.
@@ -64,15 +64,15 @@ def unescape(text):
             # character reference
             try:
                 if text[:3] == "&#x":
-                    return unichr(int(text[3:-1], 16))
+                    return chr(int(text[3:-1], 16))
                 else:
-                    return unichr(int(text[2:-1]))
+                    return chr(int(text[2:-1]))
             except ValueError:
                 pass
         else:
             # named entity
             try:
-                text = unichr(htmlentitydefs.name2codepoint[text[1:-1]])
+                text = chr(html.entities.name2codepoint[text[1:-1]])
             except KeyError:
                 pass
         return text  # leave as is
@@ -84,7 +84,7 @@ pattern = re.compile("&(\w+?);")
 '''from http://effbot.org/librarybook/htmlentitydefs.htm'''
 
 
-def descape_entity(m, defs=htmlentitydefs.entitydefs):
+def descape_entity(m, defs=html.entities.entitydefs):
     # callback: translate one entity to its ISO Latin value
     # logger.info('descape %s'%m.groups())
     try:
@@ -93,7 +93,7 @@ def descape_entity(m, defs=htmlentitydefs.entitydefs):
         # logger.warning('key error descape %s'%(m.groups()))
         return m.group(0)  # use as is
     except Exception as error:
-        logger.warning('error descaping text %s' % (m.groups()))
+        print('error descaping text %s' % (m.groups()))
         return None
 
 
@@ -101,7 +101,7 @@ def descape(string, accents=False):
     try:
         it = pattern.sub(de_accent, string) if accents else pattern.sub(descape_entity, string)
     except Exception as error:
-        logger.error('Could not map html entities %s : string = %s' % (error, string))
+        print('Could not map html entities %s : string = %s' % (error, string))
         return string
     return it
 
@@ -373,4 +373,3 @@ if __name__ == '__main__':
 
     url = 'http:\\/\\/bit.ly\\/krMN7a'
     print(cleanStrings(url))
-

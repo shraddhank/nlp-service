@@ -1,7 +1,7 @@
 # coding: utf8
-from __future__ import unicode_literals              
-from R88R.Core.Utilities import singleton
-from R88R.Core.Logger import logger
+from __future__ import unicode_literals
+from NLP.Utils import singleton
+# from R88R.Core.Logger import logger
 
 @singleton
 class StopWords(object):

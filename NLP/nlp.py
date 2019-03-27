@@ -1,10 +1,3 @@
-import math
-
-def square_root(x):
-  y = math.sqrt(x)
-  return y
-
-
 # coding: utf8
 from __future__ import unicode_literals
 
@@ -31,7 +24,7 @@ TODO later:
 # from R88R.Core.Logger import logger
 
 
-class Base_NLP(object):
+class BaseNLP(object):
 
   def __init__(self, language, **kwargs):
     self._lang = language
@@ -58,12 +51,12 @@ class Base_NLP(object):
     return []
 
 
-class Spacy_NLP(Base_NLP):
+class SpacyNLP(BaseNLP):
   """ after instantition, this is language_specific
   """
 
   def __init__(self, language, **kwargs):
-    super(Spacy_NLP, self).__init__(language, **kwargs)
+    super(SpacyNLP, self).__init__(language, **kwargs)
 
   @property
   def nlp(self):
@@ -100,10 +93,10 @@ class Spacy_NLP(Base_NLP):
     return doc.sents
 
 
-class NLTK_NLP(Base_NLP):
+class NLTKNLP(BaseNLP):
 
   def __init__(self, language, **kwargs):
-    super(NLTK_NLP, self).__init__(language, **kwargs)
+    super(NLTKNLP, self).__init__(language, **kwargs)
     self._tokenizer = None
 
   @property
@@ -141,11 +134,11 @@ class NLP(object):
 
   @classmethod
   def load_nlp(_cls, language):
-    return Spacy_NLP(language)  # until we un dertsand NLTK lemmatization
+    return SpacyNLP(language)  # until we un dertsand NLTK lemmatization
     if language == 'en':
-      return NLTK_NLP('en')
+      return NLTKNLP('en')
     else:
-      return Spacy_NLP(language)
+      return SpacyNLP(language)
     return None
 
 

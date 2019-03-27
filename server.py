@@ -7,7 +7,6 @@ from grpcs import nlp_pb2
 from grpcs import nlp_pb2_grpc
 
 # import the original NLP.py
-from NLP import nlp
 
 
 
@@ -20,8 +19,12 @@ class NlpProcessorServicer(nlp_pb2_grpc.NlpProcessorServicer):
     # the request and response are of the data type
     # calculator_pb2.Number
     def process_nlp(self, request, context):
-        response = nlp_pb2.nlp_odata
-        response.value = nlp.square_root(request.value)
+        import pdb;pdb.set_trace()
+        from NLP.nlp_proc import NlpProc
+        response = nlp_pb2.odata
+        nlp_proc = NlpProc()
+        response.value = nlp_proc.perform_nlp(request.oid, request.odata, request.stemming,
+                                              request.named_entities, request.remove_stops, request.lemmatize)
         return response
 
 

@@ -69,7 +69,7 @@ import codecs
 import _markupbase
 import types
 import re
-from html.parser import HTMLParser, HTMLParseError
+from html.parser import HTMLParser
 try:
     from html.entities import name2codepoint
 except ImportError:
@@ -1089,7 +1089,7 @@ class HTMLParserBuilder(HTMLParser):
         else:
             try:
                 j = HTMLParser.parse_declaration(self, i)
-            except HTMLParseError:
+            except Exception as e:
                 toHandle = self.rawdata[i:]
                 self.handle_data(toHandle)
                 j = i + len(toHandle)
