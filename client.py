@@ -19,4 +19,4 @@ idata = nlp_pb2.idata(oid="02ef433c-8fe2-4865-9fd4-d3db752ec6d0", data=data, ste
 response = stub.process_nlp(idata)
 
 # response
-print(response.value)
+print(response.oid, response.data)

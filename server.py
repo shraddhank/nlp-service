@@ -7,6 +7,7 @@ from NLP.grpcs import nlp_pb2_grpc, nlp_pb2
 
 
 # import the original NLP.py
+from NLP.nlp_proc import NlpProc
 
 
 
@@ -19,9 +20,7 @@ class NlpProcessorServicer(nlp_pb2_grpc.NlpProcessorServicer):
     # the request and response are of the data type
     # calculator_pb2.Number
     def process_nlp(self, request, context):
-        import pdb;pdb.set_trace()
-        from NLP.nlp_proc import NlpProc
-        response = nlp_pb2.odata
+        response = nlp_pb2.odata()
         nlp_proc = NlpProc()
         response.oid, response.data = nlp_proc.perform_nlp(request.oid, request.data, request.stemming,
                                               request.named_entities, request.remove_stops, request.lemmatize)
@@ -45,6 +44,8 @@ server.start()
 # a sleep-loop is added to keep alive
 try:
     while True:
+        print("server running.....")
         time.sleep(86400)
 except KeyboardInterrupt:
+    print("server stopped")
     server.stop(0)
